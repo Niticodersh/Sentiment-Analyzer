@@ -1,0 +1,6 @@
+nltk==3.8.1
+plotly==5.22.0
+scipy==1.14.0
+streamlit==1.36.0
+torch==2.3.1
+transformers==4.42.3
