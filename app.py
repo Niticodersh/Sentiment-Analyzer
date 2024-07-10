@@ -1,5 +1,3 @@
-import nltk
-nltk.download()
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from scipy.special import softmax
 import streamlit as st

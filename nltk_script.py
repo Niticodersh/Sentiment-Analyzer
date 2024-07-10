@@ -1,5 +1,3 @@
-import nltk
-nltk.download()
 import string
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import plotly.express as px
