@@ -1,6 +1,21 @@
 import string
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import plotly.express as px
+
+import nltk
+from nltk import download
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+# Function to download NLTK resources if not already downloaded
+def download_nltk_resources():
+    try:
+        sid = SentimentIntensityAnalyzer()
+    except LookupError:
+        download('vader_lexicon')
+        download('punkt')
+
+# Check if NLTK resources are downloaded
+download_nltk_resources()
+
 text = input("Enter the content to be analyzed")
 lowercase = text.lower()
 cleaned_txt = lowercase.translate(str.maketrans('','',string.punctuation))

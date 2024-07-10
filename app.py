@@ -3,7 +3,21 @@ from scipy.special import softmax
 import streamlit as st
 import plotly.express as px
 import string
+
+import nltk
+from nltk import download
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+# Function to download NLTK resources if not already downloaded
+def download_nltk_resources():
+    try:
+        sid = SentimentIntensityAnalyzer()
+    except LookupError:
+        download('vader_lexicon')
+        download('punkt')
+
+# Check if NLTK resources are downloaded
+download_nltk_resources()
 # Set up the Streamlit page
 st.set_page_config(page_title="Penguin Interprets", page_icon=":penguin:", layout="wide")
 st.title(":penguin: Sentiment Analyzer")
