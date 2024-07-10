@@ -1,5 +1,6 @@
 # 🐧 Welcome to Penguin Interprets 
-This github repo provides the code to analyze the sentiments as positive, negative and neutral through a pie chart visualization. \
+This github repo provides the code to analyze the sentiments as positive, negative and neutral through a pie chart visualization. 
+
 To use this repository: 
 First clone it: `git clone https://github.com/Niticodersh/Sentiment-Analyzer.git` 
 
