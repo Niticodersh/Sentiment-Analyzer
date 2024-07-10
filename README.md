@@ -19,3 +19,6 @@ For *NLTK Analyzer* : `python nltk_script.py`
 From streamlit deployment run *app.py* : `streamlit run app.py` 
 
 We have our app deployed on streamlit to directly use it. Go to this streamlit webApp: https://penguin-interprets-sentiment-analyzer-niticodersh.streamlit.app/ 
+
+Preview of app:
+![Alt text](sentiment_analyzer_img.png)
