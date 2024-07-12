@@ -11,6 +11,7 @@ from scipy.special import softmax
 import streamlit as st
 import string
 import nltk
+import sys
 from nltk import download
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
@@ -38,12 +39,23 @@ def fine_tuned_roBERTa(text):
     model_url = "https://drive.google.com/uc?id=1-zQyH3AI9MgvicfVqJhnqs875tQi5MFO"
 
 
+    # def download_model(url, dest):
+    #     if not os.path.exists(dest):
+    #         with st.spinner('This is one-time process, once model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
+    #             response = gdown.download(url, dest, quiet=False)
+    #         st.success('Model downloaded successfully!')
     def download_model(url, dest):
         if not os.path.exists(dest):
             with st.spinner('This is one-time process, once model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
-                response = gdown.download(url, dest, quiet=False)
-            st.success('Model downloaded successfully!')
+                try:
+                    response = gdown.download(url, dest, quiet=False)
+                    st.success('Model downloaded successfully!')
+                except BrokenPipeError:  # Added error handling
+                    print("BrokenPipeError encountered during model download.", file=sys.stderr)
+                except Exception as e:
+                    print(f"An error occurred: {e}", file=sys.stderr)
 
+    download_model(model_url, model_path)
 
 
     download_model(model_url, model_path)
@@ -231,5 +243,5 @@ if analyze_button and txt:
             st.subheader("Fine-tuned roBERTa Analyzer")
             st.plotly_chart(fig_roBERTa, use_container_width=True)
 
-#test
+
 
