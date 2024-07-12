@@ -38,13 +38,16 @@ def fine_tuned_roBERTa(text):
     model_path = "best_model.ckpt"
     model_url = "https://drive.google.com/uc?id=1-zQyH3AI9MgvicfVqJhnqs875tQi5MFO"
 
-
     def download_model(url, dest):
         if not os.path.exists(dest):
-            with st.spinner('This is one-time process, once model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
-                response = gdown.download(url, dest, quiet=False)
-            st.success('Model downloaded successfully!')
-#     def download_model(url, dest):
+            try:
+                with st.spinner('This is a one-time process, downloading fine-tuned roBERTa...'):
+                    gdown.download(url, dest, quiet=False)
+                st.success('Model downloaded successfully!')
+            except Exception as e:
+                st.error(f"Error downloading model: {e}")
+
+    #     def download_model(url, dest):
 #         if not os.path.exists(dest):
 #             with st.spinner('This is one-time process, once model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
 #                 try:
