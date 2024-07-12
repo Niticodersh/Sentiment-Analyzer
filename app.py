@@ -31,7 +31,7 @@ st.title(":penguin: Sentiment Analyzer")
 msg = "Enter the content to be analyzed"
 txt = st.text_input(label=msg, value="")
 option = st.selectbox("Select a analyzer",("roBERTa Analyzer", "NLTK Analyzer", "Fine-tuned roBERTa (for financial sentiments) warning: Model size is 1.4 GB, use only if you have the required space", "Compare Analyzers"))
-print("Option chosen", option)
+# print("Option chosen", option)
 analyze_button = st.button('Analyze')
 
 def fine_tuned_roBERTa(text):
@@ -39,21 +39,21 @@ def fine_tuned_roBERTa(text):
     model_url = "https://drive.google.com/uc?id=1-zQyH3AI9MgvicfVqJhnqs875tQi5MFO"
 
 
-    # def download_model(url, dest):
-    #     if not os.path.exists(dest):
-    #         with st.spinner('This is one-time process, once model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
-    #             response = gdown.download(url, dest, quiet=False)
-    #         st.success('Model downloaded successfully!')
     def download_model(url, dest):
         if not os.path.exists(dest):
             with st.spinner('This is one-time process, once model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
-                try:
-                    response = gdown.download(url, dest, quiet=False)
-                    st.success('Model downloaded successfully!')
-                except BrokenPipeError:  # Added error handling
-                    print("BrokenPipeError encountered during model download.", file=sys.stderr)
-                except Exception as e:
-                    print(f"An error occurred: {e}", file=sys.stderr)
+                response = gdown.download(url, dest, quiet=False)
+            st.success('Model downloaded successfully!')
+#     def download_model(url, dest):
+#         if not os.path.exists(dest):
+#             with st.spinner('This is one-time process, once model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
+#                 try:
+#                     response = gdown.download(url, dest, quiet=False)
+#                     st.success('Model downloaded successfully!')
+#                 except BrokenPipeError:  # Added error handling
+# #                     print("BrokenPipeError encountered during model download.", file=sys.stderr)
+#                 except Exception as e:
+# #                     print(f"An error occurred: {e}", file=sys.stderr)
 
     download_model(model_url, model_path)
 
@@ -126,7 +126,7 @@ def fine_tuned_roBERTa(text):
     return scores, labels, max_prob, max_index, mapping
 
 def find_max_element_and_index(nums):
-    print("nums",nums)
+#     print("nums",nums)
 
     max_value = nums[0]  # Initialize max_value with the first element
     max_index = 0         # Initialize max_index with 0
@@ -180,12 +180,12 @@ def roBERTa_Analysis(text):
 
 
 if analyze_button and txt:
-    print(txt)  # For debugging in the terminal
+#     print(txt)  # For debugging in the terminal
 
     if option == "roBERTa Analyzer":
         # Analyze sentiment
         scores, labels, max_prob, max_index, mapping = roBERTa_Analysis(txt)
-        print(scores)  # For debugging in the terminal
+#         print(scores)  # For debugging in the terminal
         st.write(f"The predicted sentiment is {mapping[max_index]}, with a probability of {float(max_prob):.4f}")
 
         # Plot the results
@@ -195,7 +195,7 @@ if analyze_button and txt:
     if option == "NLTK Analyzer":
         # Analyze sentiment
         scores, labels, max_prob, max_index, mapping= NLTK_Analysis(txt)
-        print(scores)  # For debugging in the terminal
+#         print(scores)  # For debugging in the terminal
         st.write(f"The predicted sentiment is {mapping[max_index]}, with a probability of {float(max_prob):.4f}")
 
         # Plot the results
@@ -204,7 +204,7 @@ if analyze_button and txt:
 
     if option == "Fine-tuned roBERTa (for financial sentiments) warning: Model size is 1.4 GB, use only if you have the required space":
         scores, labels, max_prob, max_index, mapping = fine_tuned_roBERTa(txt)
-        print(scores)
+#         print(scores)
         st.write(f"The predicted sentiment is {mapping[max_index.item()]}, with a probability of {float(max_prob.item()):.4f}")
         # Plot the results
         fig = px.pie(values=scores, names=labels, title="Sentiment Distribution")
@@ -213,13 +213,13 @@ if analyze_button and txt:
     if option == "Compare Analyzers":
         # Analyze sentiment
         roBERTa_scores, roBERTa_labels,_ ,_ , _  = roBERTa_Analysis(txt)
-        print(roBERTa_scores)  # For debugging in the terminal
+#         print(roBERTa_scores)  # For debugging in the terminal
 
         NLTK_scores, NLTK_labels,_ ,_ , _  = NLTK_Analysis(txt)
-        print(NLTK_scores)  # For debugging in the terminal
+#         print(NLTK_scores)  # For debugging in the terminal
 
         fine_tuned_roBERTa_scores, fine_tuned_roBERTa_labels,_ ,_ , _ = fine_tuned_roBERTa(txt)
-        print(fine_tuned_roBERTa_scores)  # For debugging in the terminal
+#         print(fine_tuned_roBERTa_scores)  # For debugging in the terminal
 
 
 
