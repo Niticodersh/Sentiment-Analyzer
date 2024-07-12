@@ -43,7 +43,8 @@ def fine_tuned_roBERTa(text):
     model_path = os.path.join(current_dir, "model.ckpt")
     # model_path = "best_model.ckpt"
     # model_url = "https://drive.google.com/uc?id=1-zQyH3AI9MgvicfVqJhnqs875tQi5MFO"
-    model_url = "https://drive.google.com/uc?id=1-zQyH3AI9MgvicfVqJhnqs875tQi5MFO&confirm=t&uuid=4a7d3dc2-cf40-48ba-bf55-574437c277ca"
+    # model_url = "https://drive.google.com/uc?id=1-zQyH3AI9MgvicfVqJhnqs875tQi5MFO&confirm=t&uuid=4a7d3dc2-cf40-48ba-bf55-574437c277ca"
+    model_url = "https://drive.google.com/file/d/1-zQyH3AI9MgvicfVqJhnqs875tQi5MFO/view?usp=drive_link"
     def download_model(url, dest):
         try:
             if not os.path.exists(dest):
