@@ -450,8 +450,8 @@ analyze_button = st.button('Analyze')
 
 def fine_tuned_roBERTa(text):
     model_path = "best_model.ckpt"
-    model_url = "https://drive.google.com/uc?id=1-zQyH3AI9MgvicfVqJhnqs875tQi5MFO"
-
+    # model_url = "https://drive.google.com/uc?id=1-zQyH3AI9MgvicfVqJhnqs875tQi5MFO"
+    model_url = "https://drive.google.com/uc?id=1-zQyH3AI9MgvicfVqJhnqs875tQi5MFO&confirm=t&uuid=4a7d3dc2-cf40-48ba-bf55-574437c277ca"
     def download_model(url, dest):
         try:
             if not os.path.exists(dest):
