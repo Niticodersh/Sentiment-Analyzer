@@ -11,6 +11,7 @@ from scipy.special import softmax
 import streamlit as st
 import string
 import nltk
+from pathlib import Path
 import time
 from nltk import download
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -34,10 +35,30 @@ option = st.selectbox("Select a analyzer",("roBERTa Analyzer", "NLTK Analyzer", 
 print("Option chosen", option)
 analyze_button = st.button('Analyze')
 
+
+@st.cache_data
+def load_model():
+    save_dest = Path('model')
+    save_dest.mkdir(exist_ok=True)
+
+    f_checkpoint = Path("model/model.ckpt")
+
+    if not f_checkpoint.exists():
+        with st.spinner("Downloading model... this may take awhile! \n Don't stop it!"):
+            model_url = "https://drive.google.com/uc?id=1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
+            gdown.download(model_url, str(f_checkpoint), quiet=False)
+
+    model_dict = torch.load(f_checkpoint, map_location=torch.device('cpu'))
+    return model_dict
+
+
 def fine_tuned_roBERTa(text):
-    model_path = "model.ckpt"
-    # model_url = "https://drive.google.com/file/d/1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
-    model_url = "https://drive.google.com/uc?id=1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
+    model_dict = load_model()
+
+# def fine_tuned_roBERTa(text):
+#     model_path = "model.ckpt"
+#     # model_url = "https://drive.google.com/file/d/1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
+#     model_url = "https://drive.google.com/uc?id=1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
 
 
     # def download_model(url, dest):
@@ -46,26 +67,26 @@ def fine_tuned_roBERTa(text):
     #             response = gdown.download(url, dest, quiet=False)
     #         st.success('Model downloaded successfully!')
 
-    def download_model(url, dest):
-        if not os.path.exists(dest):
-            retries = 5
-            for attempt in range(retries):
-                try:
-                    with st.spinner(
-                            'This is a one-time process, once the model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
-                        gdown.download(url, dest, quiet=False)
-                    st.success('Model downloaded successfully!')
-                    break
-                except Exception as e:
-                    st.warning(f"Attempt {attempt + 1} of {retries} failed: {e}")
-                    time.sleep(5)  # Wait before retrying
-                    if attempt == retries - 1:
-                        st.error("Failed to download model after several attempts.")
-                        raise e
-
-
-
-    download_model(model_url, model_path)
+    # def download_model(url, dest):
+    #     if not os.path.exists(dest):
+    #         retries = 5
+    #         for attempt in range(retries):
+    #             try:
+    #                 with st.spinner(
+    #                         'This is a one-time process, once the model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
+    #                     gdown.download(url, dest, quiet=False)
+    #                 st.success('Model downloaded successfully!')
+    #                 break
+    #             except Exception as e:
+    #                 st.warning(f"Attempt {attempt + 1} of {retries} failed: {e}")
+    #                 time.sleep(5)  # Wait before retrying
+    #                 if attempt == retries - 1:
+    #                     st.error("Failed to download model after several attempts.")
+    #                     raise e
+    #
+    #
+    #
+    # download_model(model_url, model_path)
 
     class SentimentClassifier(pl.LightningModule):
         def __init__(self, config: dict):
@@ -106,7 +127,10 @@ def fine_tuned_roBERTa(text):
 
     # Load model and tokenizer
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    model = SentimentClassifier.load_from_checkpoint(model_path, config=config).to(device)
+    # model = SentimentClassifier.load_from_checkpoint(model_path, config=config).to(device)
+    # Create an instance of SentimentClassifier
+    model = SentimentClassifier(config)
+    model.load_state_dict(model_dict['state_dict'])
     model.eval()
     tokenizer = AutoTokenizer.from_pretrained('roberta-base')
     labels = ['Negative', 'Neutral', 'Positive']
