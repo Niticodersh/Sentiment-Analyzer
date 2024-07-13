@@ -11,6 +11,7 @@ from scipy.special import softmax
 import streamlit as st
 import string
 import nltk
+import time
 from nltk import download
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
@@ -39,11 +40,28 @@ def fine_tuned_roBERTa(text):
     model_url = "https://drive.google.com/uc?id=1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
 
 
+    # def download_model(url, dest):
+    #     if not os.path.exists(dest):
+    #         with st.spinner('This is one-time process, once model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
+    #             response = gdown.download(url, dest, quiet=False)
+    #         st.success('Model downloaded successfully!')
+
     def download_model(url, dest):
         if not os.path.exists(dest):
-            with st.spinner('This is one-time process, once model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
-                response = gdown.download(url, dest, quiet=False)
-            st.success('Model downloaded successfully!')
+            retries = 5
+            for attempt in range(retries):
+                try:
+                    with st.spinner(
+                            'This is a one-time process, once the model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
+                        gdown.download(url, dest, quiet=False)
+                    st.success('Model downloaded successfully!')
+                    break
+                except Exception as e:
+                    st.warning(f"Attempt {attempt + 1} of {retries} failed: {e}")
+                    time.sleep(5)  # Wait before retrying
+                    if attempt == retries - 1:
+                        st.error("Failed to download model after several attempts.")
+                        raise e
 
 
 
