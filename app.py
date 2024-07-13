@@ -89,6 +89,7 @@ def fine_tuned_roBERTa(text):
     # Load model and tokenizer
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     model = SentimentClassifier.load_from_checkpoint(model_path, config=config).to(device)
+    model.eval()
     tokenizer = AutoTokenizer.from_pretrained('roberta-base')
     labels = ['Negative', 'Neutral', 'Positive']
     mapping = {0: 'negative', 1: 'neutral', 2: 'positive'}
