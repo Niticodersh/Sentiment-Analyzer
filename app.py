@@ -11,10 +11,8 @@ from scipy.special import softmax
 import streamlit as st
 import string
 import nltk
-import sys
 from nltk import download
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-
 
 # Function to download NLTK resources if not already downloaded
 def download_nltk_resources():
@@ -32,43 +30,24 @@ st.title(":penguin: Sentiment Analyzer")
 msg = "Enter the content to be analyzed"
 txt = st.text_input(label=msg, value="")
 option = st.selectbox("Select a analyzer",("roBERTa Analyzer", "NLTK Analyzer", "Fine-tuned roBERTa (for financial sentiments) warning: Model size is 1.4 GB, use only if you have the required space", "Compare Analyzers"))
-# print("Option chosen", option)
+print("Option chosen", option)
 analyze_button = st.button('Analyze')
 
 def fine_tuned_roBERTa(text):
-    # Get the current working directory
-    current_dir = os.getcwd()
+    model_path = "model.ckpt"
+    # model_url = "https://drive.google.com/file/d/1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
+    model_url = "https://drive.google.com/uc?id=1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
 
-    # Construct the full path to the model checkpoint file
-    model_path = os.path.join(current_dir, "model.ckpt")
-    # model_path = "best_model.ckpt"
-    # model_url = "https://drive.google.com/uc?id=1-zQyH3AI9MgvicfVqJhnqs875tQi5MFO"
-    model_url = "https://drive.google.com/uc?id=1-zQyH3AI9MgvicfVqJhnqs875tQi5MFO&confirm=t&uuid=4a7d3dc2-cf40-48ba-bf55-574437c277ca"
+
     def download_model(url, dest):
-        try:
-            if not os.path.exists(dest):
-                with st.spinner('Downloading fine-tuned roBERTa...'):
-                    gdown.download(url, dest, quiet=False)
-                st.success('Model downloaded successfully!')
-            else:
-                st.info('Model already exists, skipping download.')
-        except Exception as e:
-            st.error(f"Error downloading model: {e}")
+        if not os.path.exists(dest):
+            with st.spinner('This is one-time process, once model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
+                response = gdown.download(url, dest, quiet=False)
+            st.success('Model downloaded successfully!')
 
-    #     def download_model(url, dest):
-#         if not os.path.exists(dest):
-#             with st.spinner('This is one-time process, once model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
-#                 try:
-#                     response = gdown.download(url, dest, quiet=False)
-#                     st.success('Model downloaded successfully!')
-#                 except BrokenPipeError:  # Added error handling
-# #                     print("BrokenPipeError encountered during model download.", file=sys.stderr)
-#                 except Exception as e:
-# #                     print(f"An error occurred: {e}", file=sys.stderr)
+
 
     download_model(model_url, model_path)
-
-
 
     class SentimentClassifier(pl.LightningModule):
         def __init__(self, config: dict):
@@ -109,7 +88,6 @@ def fine_tuned_roBERTa(text):
 
     # Load model and tokenizer
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    st.write(f"model path {model_path}")
     model = SentimentClassifier.load_from_checkpoint(model_path, config=config).to(device)
     tokenizer = AutoTokenizer.from_pretrained('roberta-base')
     labels = ['Negative', 'Neutral', 'Positive']
@@ -137,7 +115,7 @@ def fine_tuned_roBERTa(text):
     return scores, labels, max_prob, max_index, mapping
 
 def find_max_element_and_index(nums):
-#     print("nums",nums)
+    print("nums",nums)
 
     max_value = nums[0]  # Initialize max_value with the first element
     max_index = 0         # Initialize max_index with 0
@@ -191,12 +169,12 @@ def roBERTa_Analysis(text):
 
 
 if analyze_button and txt:
-#     print(txt)  # For debugging in the terminal
+    print(txt)  # For debugging in the terminal
 
     if option == "roBERTa Analyzer":
         # Analyze sentiment
         scores, labels, max_prob, max_index, mapping = roBERTa_Analysis(txt)
-#         print(scores)  # For debugging in the terminal
+        print(scores)  # For debugging in the terminal
         st.write(f"The predicted sentiment is {mapping[max_index]}, with a probability of {float(max_prob):.4f}")
 
         # Plot the results
@@ -206,7 +184,7 @@ if analyze_button and txt:
     if option == "NLTK Analyzer":
         # Analyze sentiment
         scores, labels, max_prob, max_index, mapping= NLTK_Analysis(txt)
-#         print(scores)  # For debugging in the terminal
+        print(scores)  # For debugging in the terminal
         st.write(f"The predicted sentiment is {mapping[max_index]}, with a probability of {float(max_prob):.4f}")
 
         # Plot the results
@@ -215,7 +193,7 @@ if analyze_button and txt:
 
     if option == "Fine-tuned roBERTa (for financial sentiments) warning: Model size is 1.4 GB, use only if you have the required space":
         scores, labels, max_prob, max_index, mapping = fine_tuned_roBERTa(txt)
-#         print(scores)
+        print(scores)
         st.write(f"The predicted sentiment is {mapping[max_index.item()]}, with a probability of {float(max_prob.item()):.4f}")
         # Plot the results
         fig = px.pie(values=scores, names=labels, title="Sentiment Distribution")
@@ -224,13 +202,13 @@ if analyze_button and txt:
     if option == "Compare Analyzers":
         # Analyze sentiment
         roBERTa_scores, roBERTa_labels,_ ,_ , _  = roBERTa_Analysis(txt)
-#         print(roBERTa_scores)  # For debugging in the terminal
+        print(roBERTa_scores)  # For debugging in the terminal
 
         NLTK_scores, NLTK_labels,_ ,_ , _  = NLTK_Analysis(txt)
-#         print(NLTK_scores)  # For debugging in the terminal
+        print(NLTK_scores)  # For debugging in the terminal
 
         fine_tuned_roBERTa_scores, fine_tuned_roBERTa_labels,_ ,_ , _ = fine_tuned_roBERTa(txt)
-#         print(fine_tuned_roBERTa_scores)  # For debugging in the terminal
+        print(fine_tuned_roBERTa_scores)  # For debugging in the terminal
 
 
 
@@ -253,6 +231,4 @@ if analyze_button and txt:
             fig_roBERTa = px.pie(values=fine_tuned_roBERTa_scores, names=fine_tuned_roBERTa_labels, title="Fine Tuned roBERTa Sentiment Distribution")
             st.subheader("Fine-tuned roBERTa Analyzer")
             st.plotly_chart(fig_roBERTa, use_container_width=True)
-
-
 
