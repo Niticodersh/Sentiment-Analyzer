@@ -46,7 +46,11 @@ def load_model():
     if not f_checkpoint.exists():
         with st.spinner("Downloading model... this may take awhile! \n Don't stop it!"):
             model_url = "https://drive.google.com/uc?id=1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
-            gdown.download(model_url, str(f_checkpoint), quiet=False)
+            try:
+                gdown.download(model_url, str(f_checkpoint), quiet=False)
+            except Exception as e:
+                st.error(f"Error downloading model: {e}")
+                return None
 
     model_dict = torch.load(f_checkpoint, map_location=torch.device('cpu'))
     return model_dict
@@ -54,8 +58,10 @@ def load_model():
 
 def fine_tuned_roBERTa(text):
     model_dict = load_model()
+    if model_dict is None:
+        return [], [], 0, 0, {}
 
-# def fine_tuned_roBERTa(text):
+    # def fine_tuned_roBERTa(text):
 #     model_path = "model.ckpt"
 #     # model_url = "https://drive.google.com/file/d/1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
 #     model_url = "https://drive.google.com/uc?id=1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
