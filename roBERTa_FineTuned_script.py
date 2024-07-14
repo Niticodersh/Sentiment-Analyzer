@@ -1,15 +1,10 @@
-import requests
-import os
-import torch
-import torch.nn as nn
-from transformers import AutoTokenizer, AutoModel, AdamW, get_cosine_schedule_with_warmup
-import pytorch_lightning as pl
-import math
-import plotly.express as px
-
-
 import os
 import gdown
+import torch
+import torch.nn as nn
+from transformers import AutoTokenizer, AutoModel
+import pytorch_lightning as pl
+import plotly.express as px
 
 model_path = "best_model.ckpt"
 model_url = "https://drive.google.com/uc?id=1-zQyH3AI9MgvicfVqJhnqs875tQi5MFO"

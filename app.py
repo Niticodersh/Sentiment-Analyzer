@@ -1,18 +1,13 @@
-import requests
-import os
 import torch
 import torch.nn as nn
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModel, AdamW, get_cosine_schedule_with_warmup
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModel
 import pytorch_lightning as pl
-import math
 import plotly.express as px
 import gdown
 from scipy.special import softmax
 import streamlit as st
 import string
-import nltk
 from pathlib import Path
-import time
 from nltk import download
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
@@ -36,7 +31,7 @@ print("Option chosen", option)
 analyze_button = st.button('Analyze')
 
 
-@st.cache_data
+# @st.cache_data
 def load_model():
     save_dest = Path('model')
     save_dest.mkdir(exist_ok=True)
@@ -44,7 +39,7 @@ def load_model():
     f_checkpoint = Path("model/model.ckpt")
 
     if not f_checkpoint.exists():
-        with st.spinner("Downloading model... this may take awhile! \n Don't stop it!"):
+        with st.spinner("This is a one-time process, once the model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa..."):
             model_url = "https://drive.google.com/uc?id=1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
             try:
                 gdown.download(model_url, str(f_checkpoint), quiet=False)
@@ -60,39 +55,6 @@ def fine_tuned_roBERTa(text):
     model_dict = load_model()
     if model_dict is None:
         return [], [], 0, 0, {}
-
-    # def fine_tuned_roBERTa(text):
-#     model_path = "model.ckpt"
-#     # model_url = "https://drive.google.com/file/d/1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
-#     model_url = "https://drive.google.com/uc?id=1CuIwhkqWu1_M_rjoHDAmFB2X5IL2UCf9"
-
-
-    # def download_model(url, dest):
-    #     if not os.path.exists(dest):
-    #         with st.spinner('This is one-time process, once model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
-    #             response = gdown.download(url, dest, quiet=False)
-    #         st.success('Model downloaded successfully!')
-
-    # def download_model(url, dest):
-    #     if not os.path.exists(dest):
-    #         retries = 5
-    #         for attempt in range(retries):
-    #             try:
-    #                 with st.spinner(
-    #                         'This is a one-time process, once the model is downloaded, you can use it as many times. Downloading fine-tuned roBERTa...'):
-    #                     gdown.download(url, dest, quiet=False)
-    #                 st.success('Model downloaded successfully!')
-    #                 break
-    #             except Exception as e:
-    #                 st.warning(f"Attempt {attempt + 1} of {retries} failed: {e}")
-    #                 time.sleep(5)  # Wait before retrying
-    #                 if attempt == retries - 1:
-    #                     st.error("Failed to download model after several attempts.")
-    #                     raise e
-    #
-    #
-    #
-    # download_model(model_url, model_path)
 
     class SentimentClassifier(pl.LightningModule):
         def __init__(self, config: dict):
@@ -133,8 +95,6 @@ def fine_tuned_roBERTa(text):
 
     # Load model and tokenizer
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    # model = SentimentClassifier.load_from_checkpoint(model_path, config=config).to(device)
-    # Create an instance of SentimentClassifier
     model = SentimentClassifier(config)
     model.load_state_dict(model_dict['state_dict'])
     model.eval()
@@ -187,6 +147,7 @@ def NLTK_Analysis(text):
     max_prob, max_index = find_max_element_and_index(scores)
 
     return scores, labels, max_prob, max_index, mapping
+
 # Define the analysis function
 def roBERTa_Analysis(text):
     # Pre-process text
