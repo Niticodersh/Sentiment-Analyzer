@@ -34,6 +34,8 @@ This section describes how to set up and run the Sentiment Analyzer Application,
  streamlit run app.py
 ```
 
+## Analyzers
+
 This code provides sentiment analysis using three analyzers.
 1. **roBERTa Analyzer**: It uses RoBERTa model (Robustly Optimized BERT Pretraining Approach) by Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Mandar Joshi, Danqi Chen, Omer Levy, Mike Lewis, Luke Zettlemoyer, Veselin Stoyanov. It is based on Google’s BERT model released in 2018.
 2. **NLTK Analyzer**: It uses nltk inbuilt library SentimentIntensityAnalyzer.
@@ -49,7 +51,12 @@ python roBERTa_script.py
 For *NLTK Analyzer* : 
 ```bash
 python nltk_script.py
-``` 
+```
+
+For *Fine-Tuned roBERTa Analyzer* :
+```bash
+python roBERTa_FineTuned_script.py
+```
 
 
 We have our app deployed on streamlit to directly use it. 
