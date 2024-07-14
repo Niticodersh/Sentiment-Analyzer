@@ -59,6 +59,7 @@ For *Fine-Tuned roBERTa Analyzer (for financial sentiment analysis)* :
 ```bash
 python roBERTa_FineTuned_script.py
 ```
+If you want to know the fine-tuning work flow, look into the ``` Sentiment_Analysis.ipynb```
 
 ## Streamlit App
 
