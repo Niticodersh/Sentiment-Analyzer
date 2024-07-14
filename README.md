@@ -11,6 +11,7 @@ This section describes how to set up and run the Sentiment Analyzer Application,
    
  ```bash 
  git clone https://github.com/Niticodersh/Sentiment-Analyzer.git
+cd Sentiment-Analyzer
 ``` 
 2. **Create a virtual environment** 
 - For Unix/Linux/MacOS:
