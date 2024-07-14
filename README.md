@@ -40,7 +40,8 @@ This code provides sentiment analysis using three analyzers.
 1. **roBERTa Analyzer**: It uses RoBERTa model (Robustly Optimized BERT Pretraining Approach) by Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Mandar Joshi, Danqi Chen, Omer Levy, Mike Lewis, Luke Zettlemoyer, Veselin Stoyanov. It is based on Google’s BERT model released in 2018.
 2. **NLTK Analyzer**: It uses nltk inbuilt library SentimentIntensityAnalyzer.
 3. **Fine-tuned roBERTa Analyzer**: The roBERTa is fine-tuned of financial sentiments.
-   
+
+## CLI Based Analyzers
 Run the CLI based python files to see the model results. 
 
 For *roBERTa Analyzer* : 
@@ -53,11 +54,12 @@ For *NLTK Analyzer* :
 python nltk_script.py
 ```
 
-For *Fine-Tuned roBERTa Analyzer* :
+For *Fine-Tuned roBERTa Analyzer (for financial sentiment analysis)* :
 ```bash
 python roBERTa_FineTuned_script.py
 ```
 
+## Streamlit App
 
 We have our app deployed on streamlit to directly use it. 
 
@@ -65,5 +67,5 @@ Go to this streamlit webApp: https://penguin-interprets-sentiment-analyzer-nitic
 
 Note: The fine-tuned model might not be able to get downloaded due to some issue with gdown library and streamlit cloud environment. In case you wish to do normal sentiment analysis, you can directly use the webApp, but if you want to use specially for financial sentiment analysis, it's suggested to run locally by following the commands given under [Installation](#installation).
 
-Preview of app:
+## Preview of App:
 ![Alt text](sentiment_analyzer_img.png)
